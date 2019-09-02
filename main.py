@@ -2,6 +2,7 @@ import os
 import json
 import glob
 
+
 def merge(input_files, output_dir, key, max_file_size=1024*1024, output_file_prefix='merged'):
     # Ensure if input exists
     if len(input_files) == 0:
@@ -14,7 +15,7 @@ def merge(input_files, output_dir, key, max_file_size=1024*1024, output_file_pre
     # eg: {"strikers": []}
     base_prefix = '{{"{}": ['.format(key).encode()
     base_suffix = ']}'.encode()
-    base_size = len(base_prefix + base_suffix)
+    base_size = len(base_prefix+base_suffix)
 
     out_count_suffix = 1
 
@@ -25,11 +26,13 @@ def merge(input_files, output_dir, key, max_file_size=1024*1024, output_file_pre
         try:
             data = json.load(open(in_file))
         except json.JSONDecodeError as e:
-            pass
+            print('Invalid JSON file {}. Skipping.'.format(in_file))
+            print()
             continue
 
         if key not in data:
-            pass
+            print('Key {} not in {}. Skipping file'.format(key, in_file))
+            print()
             continue
 
         data = data[key]
@@ -48,7 +51,9 @@ def merge(input_files, output_dir, key, max_file_size=1024*1024, output_file_pre
             if item_size + base_size > max_file_size:
                 # Item too large. Cannot be stored in any file as
                 # it exceeds MAX_LENGTH. Skip the record.
-                pass
+                print('Record larger than max length. Skipping.')
+                print('File: {}, Index: {}'.format(in_file, cur_index))
+                print()
                 cur_index += 1
 
             elif (out_size + item_size) > max_file_size:
@@ -78,8 +83,8 @@ def merge(input_files, output_dir, key, max_file_size=1024*1024, output_file_pre
 
 
 def main():
-    input_dir = 'data'
-    input_file_prefix = 'input'
+    input_dir = 'input'
+    input_file_prefix = 'data'
 
     output_dir = 'output'
     output_file_prefix = 'merged_'
@@ -96,7 +101,9 @@ def main():
     input_files = glob.glob(input_path)
 
     if len(input_files) == 0:
-        pass
+        print('No JSON files found.')
+        print('Check if you have entered the path correctly.')
+        print()
         return
 
     # Sort based on counter value
