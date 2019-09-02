@@ -1,28 +1,27 @@
 # FW-backend
-JSON-Merge
+# JSON Merge
+## Usage
+```main.py [-h] [-i IPREFIX] [-o OPREFIX] [-m MAX] inputdir outputdir key```
+Where:
+- **IPREFIX** is the prefix of input JSON files [Default: input]
+- **OPREFIX** is the prefix for ouput merged JSON files [Default: merged]
+- **MAX** is the maximum size of each merged JSON file in bytes *[Default: 1MB]
 
-main.py is the file which has all fuctionalities for merging json files,
-  - command line to execute the file is "python main.py <folderpath> --inprefix <input file base name> output --outprefix <output file base     name> --max <maximum size of file> <key>", as told it accepts all input paramaters
-  - the file contains two function, named as main() and merge()
-  -main()
-   => this function gets the input parameters from the user.
-   => read all files in the Folder Path that begin with the Input File Base Name, and process them in increasing order of the number added       as a suffix to each file
-   => the file is sent to merge function in increasing order for processing further
-  -merge()
-   => ensures the input file exists
-   => ensures output directory exists or create new
-   => gets the base size of json data
-   => checks whether the file is json file
-   => check the key is present in json file
-   => check the output file has any items previously, if not add directly, else, add comma and space with the item
-   => If item is too large, it cannot be store in any file. That particular record will be skipped
-   => If output_size and item_size is greater than maximum file size then new file is created and item is stored
-   => It supports non-english characters
-  
-  -Complexity of algorithm,
-    O(n), where n is the total number of items in a combined array
-    
-  -Language used is Python
-  -Unit testing is done to test the number of files in output file and each output file size is equal or not.
-  
-    
+## Program
+The program maintains the order of the the input elements in the merged files. This may result in creating more number of output files than required. But it is a trade-off to reduce program time and preserve the order.
+
+### Algorithm Complexity
+**O(n)** where n us the total number of array items in all files combined.
+
+### Platform
+Linux, Windows, OS X (not tested)
+
+### Language
+Python3
+
+### Error Handling
+- Check if input path contains any JSON files with the given prefix
+- Check if the input files are valid JSON. Skip files that are not valid.
+- Check if the JSON file contains the required key. Skip file if key is not present.
+- Check if any individual record on its own, exceeds the maximum allowed size. Skip record if so.
+
