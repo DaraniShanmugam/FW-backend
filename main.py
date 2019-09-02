@@ -1,7 +1,8 @@
 import os
 import json
 import glob
-
+import sys
+import argparse
 
 def merge(input_files, output_dir, key, max_file_size=1024*1024, output_file_prefix='merged'):
     # Ensure if input exists
@@ -81,19 +82,34 @@ def merge(input_files, output_dir, key, max_file_size=1024*1024, output_file_pre
     with open(os.path.join(output_dir, cur_file), 'wb') as fp:
         fp.write(out_data)
 
+def create_arg_parser():
+    """"Creates and returns the ArgumentParser object."""
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('inputdir')
+    parser.add_argument('outputdir')
+    parser.add_argument('key')
+    parser.add_argument('-i', "--inprefix", dest='iprefix',
+                        help='Prefix for JSON files under inputdir [Default: input]', default='input')
+    parser.add_argument('-o', "--outprefix", dest='oprefix',
+                        help='Prefix for JSON files to store under outputdir [Default: merged]', default='merged')
+    parser.add_argument('-m', "--max", dest='max',
+                        help='Maximum file size for output in bytes. [Default: 1MB]', default=1024*1024, type=int)
+    return parser
+
 
 def main():
-    input_dir = 'input'
-    input_file_prefix = 'data'
+    arg_parser = create_arg_parser().parse_args()
 
-    output_dir = 'output'
-    output_file_prefix = 'merged_'
+    input_dir = arg_parser.inputdir
+    input_file_prefix = arg_parser.iprefix
+
+    output_dir = arg_parser.outputdir
+    output_file_prefix = arg_parser.oprefix
 
     # Max file size of each output file in bytes
-    max_file_size = 70
-
-    key = 'strikers'
-
+    max_file_size = arg_parser.max
+    key = arg_parser.key
     input_path = os.path.join(
         input_dir, '{}*.json'.format(input_file_prefix))
 
