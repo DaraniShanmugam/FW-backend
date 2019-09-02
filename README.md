@@ -11,7 +11,7 @@ Where:
 The program maintains the order of the the input elements in the merged files. This may result in creating more number of output files than required. But it is a trade-off to reduce program time and preserve the order.
 
 ### Algorithm Complexity
-**O(n)** where n us the total number of array items in all files combined.
+**O(n)** where n is the total number of array items in all files combined.
 
 ### Platform
 Linux, Windows, OS X (not tested)
